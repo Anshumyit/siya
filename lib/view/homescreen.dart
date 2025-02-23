@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:siya/view/deatils.dart';
 import 'package:siya/viewcontroller/controller.dart';
 // Screens
 class HomeScreen extends StatelessWidget {
@@ -28,20 +29,21 @@ class HomeScreen extends StatelessWidget {
             ),
           );
         }
-        return ListView.builder(
-          itemCount: controller.stories.length,
-          itemBuilder: (context, index) {
-            final story = controller.stories[index];
-            return ListTile(
-              title: Text(story.title),
-              subtitle: Text(story.url.isEmpty ? "No URL available" : story.url),
-              onTap: () {
-                if (story.url.isNotEmpty) {
-                  // Open URL in browser
-                }
-              },
-            );
-          },
+        return RefreshIndicator(
+          onRefresh: controller.fetchStories,
+          child: ListView.builder(
+            itemCount: controller.stories.length,
+            itemBuilder: (context, index) {
+              final story = controller.stories[index];
+              return ListTile(
+                title: Text(story.title),
+                subtitle: Text(story.url.isEmpty ? "No URL available" : story.url),
+                onTap: () {
+                  Get.to(() => StoryDetailScreen(story: story));
+                },
+              );
+            },
+          ),
         );
       }),
     );
